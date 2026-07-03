@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import connectDB from "@/lib/mongodb";
-import Watch from "@/lib/models/watch";
+import Order from "@/lib/models/order";
 
 export async function GET(
   _request: NextRequest,
@@ -9,13 +9,11 @@ export async function GET(
   try {
     await connectDB();
     const { id } = await context.params;
-    const watch = await Watch.findById(id);
-
-    if (!watch) {
-      return Response.json({ error: "Watch not found" }, { status: 404 });
+    const order = await Order.findById(id);
+    if (!order) {
+      return Response.json({ error: "Order not found" }, { status: 404 });
     }
-
-    return Response.json(watch);
+    return Response.json(order);
   } catch (e) {
     return Response.json({ error: (e as Error).message }, { status: 500 });
   }
@@ -29,16 +27,14 @@ export async function PUT(
     await connectDB();
     const { id } = await context.params;
     const body = await request.json();
-    const watch = await Watch.findByIdAndUpdate(id, body, {
+    const order = await Order.findByIdAndUpdate(id, body, {
       new: true,
       runValidators: true,
     });
-
-    if (!watch) {
-      return Response.json({ error: "Watch not found" }, { status: 404 });
+    if (!order) {
+      return Response.json({ error: "Order not found" }, { status: 404 });
     }
-
-    return Response.json(watch);
+    return Response.json(order);
   } catch (e) {
     return Response.json({ error: (e as Error).message }, { status: 500 });
   }
@@ -51,13 +47,11 @@ export async function DELETE(
   try {
     await connectDB();
     const { id } = await context.params;
-    const watch = await Watch.findByIdAndDelete(id);
-
-    if (!watch) {
-      return Response.json({ error: "Watch not found" }, { status: 404 });
+    const order = await Order.findByIdAndDelete(id);
+    if (!order) {
+      return Response.json({ error: "Order not found" }, { status: 404 });
     }
-
-    return Response.json({ message: "Watch deleted successfully" });
+    return Response.json({ message: "Order deleted successfully" });
   } catch (e) {
     return Response.json({ error: (e as Error).message }, { status: 500 });
   }

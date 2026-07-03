@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import { products, formatPrice } from "@/lib/products";
+import { formatPrice, type Product } from "@/lib/products";
 import { useCart } from "@/context/CartContext";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -12,8 +12,31 @@ gsap.registerPlugin(ScrollTrigger);
 export default function FeaturedWatches() {
   const sectionRef = useRef<HTMLElement>(null);
   const { addItem } = useCart();
+  const [watches, setWatches] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
+    async function fetchWatches() {
+      try {
+        const res = await fetch("/api/watches");
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error || `Request failed (${res.status})`);
+        }
+        const data: Product[] = await res.json();
+        setWatches(data);
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchWatches();
+  }, []);
+
+  useEffect(() => {
+    if (loading) return;
     const ctx = gsap.context(() => {
       gsap.fromTo(
         ".watch-section-title",
@@ -51,7 +74,7 @@ export default function FeaturedWatches() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [loading]);
 
   return (
     <section
@@ -73,8 +96,17 @@ export default function FeaturedWatches() {
           horological mastery.
         </p>
 
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-gold border-t-transparent" />
+          </div>
+        ) : error ? (
+          <p className="text-center text-red-500 py-20">{error}</p>
+        ) : watches.length === 0 ? (
+          <p className="text-center text-text-body/50 py-20">No watches available.</p>
+        ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => (
+          {watches.map((product) => (
             <div
               key={product.id}
               className="watch-card group relative overflow-hidden rounded-sm bg-white shadow-sm transition-all duration-500 hover:shadow-xl"
@@ -123,6 +155,7 @@ export default function FeaturedWatches() {
             </div>
           ))}
         </div>
+        )}
 
         <div className="mt-14 text-center">
           <a

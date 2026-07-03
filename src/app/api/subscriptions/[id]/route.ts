@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import connectDB from "@/lib/mongodb";
-import Watch from "@/lib/models/watch";
+import Subscription from "@/lib/models/subscription";
 
 export async function GET(
   _request: NextRequest,
@@ -9,13 +9,11 @@ export async function GET(
   try {
     await connectDB();
     const { id } = await context.params;
-    const watch = await Watch.findById(id);
-
-    if (!watch) {
-      return Response.json({ error: "Watch not found" }, { status: 404 });
+    const sub = await Subscription.findById(id);
+    if (!sub) {
+      return Response.json({ error: "Subscription not found" }, { status: 404 });
     }
-
-    return Response.json(watch);
+    return Response.json(sub);
   } catch (e) {
     return Response.json({ error: (e as Error).message }, { status: 500 });
   }
@@ -29,16 +27,17 @@ export async function PUT(
     await connectDB();
     const { id } = await context.params;
     const body = await request.json();
-    const watch = await Watch.findByIdAndUpdate(id, body, {
+    if (body.status === "cancelled" && !body.cancelledAt) {
+      body.cancelledAt = new Date();
+    }
+    const sub = await Subscription.findByIdAndUpdate(id, body, {
       new: true,
       runValidators: true,
     });
-
-    if (!watch) {
-      return Response.json({ error: "Watch not found" }, { status: 404 });
+    if (!sub) {
+      return Response.json({ error: "Subscription not found" }, { status: 404 });
     }
-
-    return Response.json(watch);
+    return Response.json(sub);
   } catch (e) {
     return Response.json({ error: (e as Error).message }, { status: 500 });
   }
@@ -51,13 +50,11 @@ export async function DELETE(
   try {
     await connectDB();
     const { id } = await context.params;
-    const watch = await Watch.findByIdAndDelete(id);
-
-    if (!watch) {
-      return Response.json({ error: "Watch not found" }, { status: 404 });
+    const sub = await Subscription.findByIdAndDelete(id);
+    if (!sub) {
+      return Response.json({ error: "Subscription not found" }, { status: 404 });
     }
-
-    return Response.json({ message: "Watch deleted successfully" });
+    return Response.json({ message: "Subscription deleted successfully" });
   } catch (e) {
     return Response.json({ error: (e as Error).message }, { status: 500 });
   }
