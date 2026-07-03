@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable");
-}
+const MONGODB_URI = "mongodb+srv://rbantor2003_db_user:Antor0019@cluster0.ag5rfcz.mongodb.net/watch-dealer?retryWrites=true&w=majority&appName=Cluster0";
 
 interface MongooseCache {
   conn: typeof mongoose | null;
@@ -27,7 +23,7 @@ async function connectDB(): Promise<typeof mongoose> {
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI!, {
+    cached.promise = mongoose.connect(MONGODB_URI, {
       bufferCommands: false,
     });
   }

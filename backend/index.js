@@ -1,4 +1,3 @@
-require("dotenv").config({ path: require("path").join(__dirname, "..", ".env.local") });
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -42,29 +41,7 @@ function buildDirectURI(hosts, user, pass, db) {
 }
 
 async function connectDB() {
-  const MONGODB_URI = process.env.MONGODB_URI;
-
-  if (!MONGODB_URI) {
-    console.error("MONGODB_URI environment variable is not set");
-    process.exit(1);
-  }
-
-  let uri = MONGODB_URI;
-  const parsed = parseSRVUri(MONGODB_URI);
-
-  if (parsed) {
-    try {
-      const hosts = resolveSRVviaNslookup(parsed.host);
-      if (hosts.length > 0) {
-        uri = buildDirectURI(hosts, parsed.user, parsed.pass, parsed.db);
-        console.log("SRV resolved via nslookup, using direct connection");
-      }
-    } catch {
-      console.warn("nslookup failed, using SRV URI directly");
-    }
-  }
-
-  await mongoose.connect(uri, {
+  await mongoose.connect("mongodb+srv://rbantor2003_db_user:Antor0019@cluster0.ag5rfcz.mongodb.net/watch-dealer?retryWrites=true&w=majority&appName=Cluster0", {
     bufferCommands: false,
     serverSelectionTimeoutMS: 15000,
     connectTimeoutMS: 15000,
