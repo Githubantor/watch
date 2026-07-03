@@ -36,7 +36,7 @@ export default function FeaturedWatches() {
   }, []);
 
   useEffect(() => {
-    if (loading) return;
+    if (loading || watches.length === 0) return;
     const ctx = gsap.context(() => {
       gsap.fromTo(
         ".watch-section-title",
@@ -53,6 +53,9 @@ export default function FeaturedWatches() {
           },
         }
       );
+
+      const cards = sectionRef.current?.querySelectorAll(".watch-card");
+      if (!cards?.length) return;
 
       gsap.fromTo(
         ".watch-card",
@@ -74,7 +77,7 @@ export default function FeaturedWatches() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [loading]);
+  }, [loading, watches.length]);
 
   return (
     <section
