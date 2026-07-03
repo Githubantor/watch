@@ -41,7 +41,7 @@ function buildDirectURI(hosts, user, pass, db) {
 }
 
 async function connectDB() {
-  await mongoose.connect("mongodb+srv://rbantor2003_db_user:Antor0019@cluster0.ag5rfcz.mongodb.net/watch-dealer?retryWrites=true&w=majority&appName=Cluster0", {
+  await mongoose.connect("mongodb+srv://antor1234:gLtCjLFlziknQ5vC@cluster0.ify2tzs.mongodb.net/watch-dealer?retryWrites=true&w=majority&appName=Cluster0", {
     bufferCommands: false,
     serverSelectionTimeoutMS: 15000,
     connectTimeoutMS: 15000,

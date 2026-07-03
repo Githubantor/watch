@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
-const SRV_URI = "mongodb+srv://rbantor2003_db_user:Antor0019@cluster0.ag5rfcz.mongodb.net/watch-dealer?retryWrites=true&w=majority&appName=Cluster0";
-const DIRECT_URI = "mongodb://rbantor2003_db_user:Antor0019@cluster0-shard-00-00.ag5rfcz.mongodb.net:27017,cluster0-shard-00-01.ag5rfcz.mongodb.net:27017,cluster0-shard-00-02.ag5rfcz.mongodb.net:27017/watch-dealer?ssl=true&authSource=admin&retryWrites=true&w=majority&appName=Cluster0";
+const SRV_URI = "mongodb+srv://antor1234:gLtCjLFlziknQ5vC@cluster0.ify2tzs.mongodb.net/watch-dealer?retryWrites=true&w=majority&appName=Cluster0";
+const DIRECT_URI = "mongodb://antor1234:gLtCjLFlziknQ5vC@cluster0-shard-00-00.ify2tzs.mongodb.net:27017,cluster0-shard-00-01.ify2tzs.mongodb.net:27017,cluster0-shard-00-02.ify2tzs.mongodb.net:27017/watch-dealer?ssl=true&authSource=admin&retryWrites=true&w=majority&appName=Cluster0";
 
 interface MongooseCache {
   conn: typeof mongoose | null;
